@@ -1,0 +1,232 @@
+---
+title: "Class_06"
+author: Kristiana Wong A16281367
+format: pdf
+---
+## R Functions
+
+All functions in R have at least three things:
+
+- A **name**  (we get to pick this)
+- One or more **input arguments** (the input to our function)
+- The **body** (lines of code that do the work)
+
+```{r}
+#| eval: false
+
+funname <- function(input1, input2) {
+  #The body with R code
+}
+```
+
+Let's write a silly first function to add two numbers:
+
+```{r}
+x <- 5
+y <- 1
+x + y
+```
+
+```{r}
+addme <- function(x, y=1) {
+  x + y
+}
+```
+
+```{r}
+addme(1, 1)
+```
+
+```{r}
+addme(10)
+```
+
+## Lab for Today
+
+**Background**
+
+In this session you will work through the process of developing your own function for calculating average grades for fictional students in a fictional class.
+The process will involve starting slowly with small defined input vectors (where you know what the answer should be). Then building up to work with more complex input vectors (with multiple missing elements).
+Finally, you will turn your code into a function and apply it to a realistic gradebook available online to answer a set of common grading questions. Useful hints are provided in the next section.
+
+**Hints**
+
+Once you have a working function for vector inputs (such as the student1, student2, and student3 vectors below) you can use the apply() function to work with data frame inputs such as those obtained from read.csv().
+Additional functions you will want to explore include mean(), is.na(), which.min(), which.max(), sum(), and cor(). Remember, you can ask for help on any function by typing a question mark before the function name e.g. ?sum.
+We will walk through many of these steps together in class and in the video review screen-cast. However, attempting on your own before then is highly recommended and will be a big help for following our in class discussion and the the screen-cast review video. As always, if you have questions please ask in person or on Piazza. These are important skills and we want to support you in attaining them as best we can!
+
+```{r}
+# Example input vectors to start with
+student1 <- c(100, 100, 100, 100, 100, 100, 100, 90)
+student2 <- c(100, NA, 90, 90, 90, 90, 97, 80)
+student3 <- c(90, NA, NA, NA, NA, NA, NA, NA)
+```
+
+Let's just find the average
+```{r}
+mean(student1)
+mean(student2, na.rm = TRUE)
+mean(student3, na.rm = TRUE)
+```
+
+This isn't fair, there is no way Student 3 should have a mean of 90!
+
+Come back to this NA problem. But things worked for 'Student1'.
+
+We want to drop the lowest score before getting the 'mean()'.
+
+How do I find the lowest (minimum) score?
+
+```{r}
+min(student1, na.rm = FALSE)
+min(student2, na.rm = FALSE)
+min(student3, na.rm = FALSE)
+```
+
+I found the 'which.min()' function. Maybe this will be more helpful?
+
+```{r}
+which.min(student1)
+which.min(student2)
+which.min(student3)
+```
+
+Alternatively:
+```{r}
+#Find the lowest score
+student1[which.min(student1)]
+student2[which.min(student2)]
+student3[which.min(student3)]
+```
+
+Cool! The output returns to us which element in the vector is the lowest score. Can I remove this value?
+
+Here's a neat little trick:
+```{r}
+x <- 1:5
+x[-3]
+```
+
+Now to apply this to identify and drop the lowest score and then calculate the mean:
+```{r}
+#Remove lowest score and find the mean
+mean(student1[-8])
+mean(student2[-8])
+mean(student3[-1])
+```
+We're still getting an NA error though. Hm....
+
+Firstly though, let's do a common shortcut to condense the work:
+```{r}
+x <- student1
+y <- student2
+z <- student3
+```
+
+One suggestion was to convert the NA values to zero. Lets first see which values are NA within each vector:
+```{r}
+is.na(x)
+is.na(y)
+is.na(z)
+```
+
+How can I remove the NA elements from the vector?
+```{r}
+x[!is.na(x)] <- 0
+y[!is.na(y)] <- 0
+z[!is.na(z)] <- 0
+```
+
+Alright. Lets solve this:
+```{r}
+x <- student1
+
+#Change NA values to Zero
+x[is.na(x)] <- 0
+#Find and remove min value and get the mean
+mean(x[-which.min(x)])
+```
+
+```{r}
+y <- student2
+
+#Change NA values to Zero
+y[is.na(y)] <- 0
+#Find and remove min value and get the mean
+mean(y[-which.min(y)])
+```
+
+```{r}
+z <- student3
+
+#Change NA values to Zero
+z[is.na(z)] <- 0
+#Find and remove min value and get the mean
+mean(z[-which.min(z)])
+```
+
+Last step now that I have my working code snippet is to make my 'grade()' function.
+```{r}
+grade <- function(student1, student2, student3) {
+
+   x <- student1
+
+#Change NA values to Zero
+x[is.na(x)] <- 0
+#Find and remove min value and get the mean
+mean(x[-which.min(x)])
+}
+```
+
+Lets see if it worked:
+```{r}
+grade (student1)
+grade (student2)
+grade (student3)
+```
+
+Yay! It worked!
+
+Now read the online gradebook (CSV file)
+```{r}
+url <- "https://tinyurl.com/gradeinput"
+gradebook <- read.csv(url, row.names = 1)
+
+head(gradebook)
+```
+Q1. Write a function grade() to determine an overall grade from a vector of student homework assignment scores dropping the lowest single score. If a student misses a homework (i.e. has an NA value) this can be used as a score to be potentially dropped. Your final function should be adquately explained with code comments and be able to work on an example class gradebook such as this one in CSV format: “https://tinyurl.com/gradeinput” 
+
+```{r}
+results <- apply(gradebook, 1, grade)
+results
+```
+
+Q2. Using your grade() function and the supplied gradebook, Who is the top scoring student overall in the gradebook?
+```{r}
+max(results)
+(which.max(results))
+```
+
+Q3. From your analysis of the gradebook, which homework was toughest on students (i.e. obtained the lowest scores overall?
+```{r}
+which.min(apply(gradebook, 2, sum, na.rm = T))
+```
+
+Q4. Optional Extension: From your analysis of the gradebook, which homework was most predictive of overall score (i.e. highest correlation with average grade score)?
+```{r}
+mask <- gradebook
+mask[is.na(mask)] <- 0
+#mask
+
+```
+We can use the 'cor()' function for correlation analysis.
+```{r}
+cor(gradebook$hw1, results)
+```
+We need to use the 'apply()' function to apply this over the whole gradebook
+```{r}
+apply(mask, 2, cor, results)
+```
+Homework 5 was most predicitive.
+
+Q5. Make sure you save your Quarto document and can click the “Render” (or Rmark- down”Knit”) button to generate a PDF foramt report without errors. Finally, submit your PDF to gradescope.
