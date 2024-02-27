@@ -1,2 +1,2 @@
 # BIMM143
-Classwork from WI24 for BIMM143 UCSD
+Classwork from WI24 for BIMM143 UC San Diego
