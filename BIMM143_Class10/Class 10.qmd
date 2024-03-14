@@ -1,0 +1,161 @@
+---
+title: "Class 10"
+author: "Kristiana Wong A16281367"
+format: pdf
+---
+
+##1. Introduction to the RCSB Protein Data Bank (PDB)
+The PDB archive is the major repository of information about the 3D structures of large biological molecules, including proteins and nucleic acids. Understanding the shape of these molecules helps to understand how they work. This knowledge can be used to help deduce a structure’s role in human health and disease, and in drug development. The structures in the PDB range from tiny proteins and bits of DNA or RNA to complex molecular machines like the ribosome composed of many chains of protein and RNA.
+
+First, let's download the CSV file
+```{r}
+pdb <- read.csv("Data Export Summary.csv", row.names = 1)
+head(pdb)
+```
+
+My pdb data frame has commas in them, which may prove to be a problem
+```{r}
+pdb$X.ray
+pdb$EM
+```
+This will be a problem, so we need to change these from characters to numerics.
+```{r}
+num <- function(sum) {
+  sum(as.numeric(gsub(",", "", s)))
+}
+
+structures <- list(pdb$X.ray, pdb$EM, pdb$Total)
+for (s in structures) {
+  print(num(structures))
+}
+```
+Alternatively:
+```{r}
+x.ray <- as.numeric(gsub(",", "", pdb$X.ray))
+em <- as.numeric(gsub(",", "", pdb$EM))
+total <- as.numeric(gsub(",", "", pdb$Total))
+```
+Now, we can use these numeric values in our calculations.
+
+Q1: What percentage of structures in the PDB are solved by X-Ray and Electron Microscopy.
+```{r}
+#From first code box
+round((182348/215684 * 100), 2) #x.ray percentage
+round((18817/215684 * 100), 2) #em percentage
+
+#From second code box
+round((sum(x.ray)/sum(total)) * 100, 2)
+round((sum(em)/sum(total)) * 100, 2)
+```
+84.54% of structures in PDB are solved by X-ray. 8.72% of structures in PDB are solved by EM.
+
+Q2: What proportion of structures in the PDB are protein?
+```{r}
+protein_only <- as.numeric(gsub(",", "", pdb[1,7]))
+
+#Find the proportion
+round((protein_only/sum(total)) * 100, 2)
+```
+86.65% of structures are proteins.
+
+Q3: Type HIV in the PDB website search box on the home page and determine how many HIV-1 protease structures are in the current PDB?
+```{r}
+#4,410 searches found in the database
+round(4410/sum(total) * 100, 2)
+```
+2.04% of HIV-1 protease structures in the current PDB.
+
+##2. Visualizing Protein Structures
+We will learn the basics of Mol* (mol-star) homepage: https://molstar.org/viewer/
+
+We will play with PDB code 1HSG
+![](1HSG.png)
+
+Show the Asp25 amino acids:
+![](1HSG copy.png)
+##3. Introduction to Bio3d in R 
+
+Predict the dynamics (flexibility) of an important protein:
+```{r}
+library(bio3d)
+
+hiv <- read.pdb("1hsg")
+hiv
+```
+```{r}
+head(hiv$atom)
+```
+#pdbseq(hiv)
+
+nma normal mode analysis to predict functional motions of kinase protein
+```{r}
+adk <- read.pdb("6s36")
+adk
+```
+```{r}
+#bioinformatics calculation of motions of this protein
+modes <-nma(adk)
+plot(modes)
+```
+
+Make a "movie" called a trajectory of the predicted motions:
+```{r}
+mktrj(modes, file = "adk_m7.pdb")
+```
+Then I can open this file in Mol*...
+
+##4. Comparative structure analysis of Adenylate Kinase
+The goal of this section is to perform principal component analysis (PCA) on the complete collection of Adenylate kinase structures in the protein data-bank (PDB).
+
+Starting from only one Adk PDB identifier (PDB ID: 1AKE) we will search the entire PDB for related structures using BLAST, fetch, align and superpose the identified structures, perform PCA and finally calculate the normal modes of each individual structure in order to probe for potential differences in structural flexibility.
+
+```{r}
+library(bio3d)
+aa <- get.seq("1ake_A")
+aa
+```
+Now we can use this sequence as a query to BLAST search the PDB to find similar sequences and structures.
+```{r}
+b <- blast.pdb(aa)
+```
+
+```{r}
+# Plot a summary of search results
+hits <- plot(b)
+
+# List out some 'top hits'
+head(hits$pdb.id)
+```
+
+
+```{r}
+hits <- NULL
+hits$pdb.id <- c('1AKE_A','6S36_A','6RZE_A','3HPR_A','1E4V_A','5EJE_A','1E4Y_A','3X2S_A','6HAP_A','6HAM_A','4K46_A','3GMT_A','4PZL_A')
+```
+
+```{r}
+# Download releated PDB files
+files <- get.pdb(hits$pdb.id, path="pdbs", split=TRUE, gzip=TRUE)
+```
+
+```{r}
+# Align releated PDBs
+pdbs <- pdbaln(files, fit = TRUE, exefile="msa")
+```
+
+```{r}
+# Vector containing PDB codes for figure axis
+ids <- basename.pdb(pdbs$id)
+
+# Draw schematic alignment
+plot(pdbs, labels=ids)
+```
+
+The function pdb.annotate() provides a convenient way of annotating the PDB files we have collected. Below we use the function to annotate each structure to its source species. This will come in handy when annotating plots later on:
+```{r}
+anno <- pdb.annotate(ids)
+unique(anno$source)
+```
+
+
+
