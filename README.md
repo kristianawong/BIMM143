@@ -10,3 +10,10 @@ Classwork from WI24 for [BIMM143 UC San Diego](https://github.com/kristianawong/
 - Class 8: [Unsupervised learning mini-project](https://github.com/kristianawong/BIMM143/blob/main/BIMM143_Class08/Class_08.pdf)
 - Class 9: [Halloween Candy Mini-Project](https://github.com/kristianawong/BIMM143/blob/main/BIMM143_Class09/Class-09.pdf)
 - Class 10: [Structural Bioinformatics (pt1)](https://github.com/kristianawong/BIMM143/blob/main/BIMM143_Class10/Class-10.pdf)
+- Class 11: [Structural Bioinformatics (pt2 AlphaFold)](https://github.com/kristianawong/BIMM143/blob/main/BIMM143_Class11/Class-11.pdf)
+- Class 12: [Genome informatics and high throughput sequencing](https://github.com/kristianawong/BIMM143/blob/main/BIMM143_Class12/Class-12.pdf)
+- Class 13
+- Class 14
+- Class 16
+- Class 17
+- Class 18
