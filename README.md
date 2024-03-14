@@ -1,7 +1,6 @@
 # BIMM143
 
-Classwork from WI24 for [BIMM143 UC San Diego]
-(https://github.com/kristianawong/BIMM143)
+Classwork from WI24 for [BIMM143 UC San Diego](https://github.com/kristianawong/BIMM143)
 
 ## Contents
 
