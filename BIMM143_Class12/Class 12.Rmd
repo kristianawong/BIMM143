@@ -1,0 +1,61 @@
+---
+title: "Class 12"
+author: "Kristiana Wong A16281367"
+date: "2024-02-19"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+##Proportion of homozygous allele in MXL population
+```{r}
+mxl <- read.csv("MXL.csv")
+head(mxl)
+```
+```{r}
+table(mxl$Genotype..forward.strand.) / nrow(mxl) * 100
+```
+
+##Part 2. Population Scale Analysis Homework
+
+Q13: Read this file into R and determine the sample size for each genotype and their
+corresponding median expression levels for each of these genotypes.
+
+Hint: The read.table(), summary() and boxplot() functions will likely be useful here. There is an example R script online to be used ONLY if you are struggling in vein. Note that you can find the medium value
+from saving the output of the boxplot() function to an R object and examining this object. There is also the medium() and summary() function that you can use to check your understanding.
+```{r}
+ORMDL3 <- read.table("rs8067378_ENSG00000172057.6.txt")
+head(ORMDL3)
+```
+
+```{r}
+# Group by Genotype and calculate sample size and median expression
+library(dplyr)
+
+summary_table <- ORMDL3 %>%
+  group_by(geno) %>%
+  summarise(
+    SampleSize = n(),          # Count of samples for each genotype
+    MedianExpression = median(exp, na.rm = TRUE)  # Median expression for each genotype
+  )
+
+# Display the summary table
+print(summary_table)
+```
+There are 108 A/A, 233 A/G, and 121 G/G genotypes in this sample. The median expression is 31.24%, 25.06%, and 20.07% respectively.
+
+Q14: Generate a boxplot with a box per genotype, what could you infer from the relative
+expression value between A/A and G/G displayed in this plot? Does the SNP effect the
+expression of ORMDL3?
+```{r}
+library(ggplot2)
+
+ggplot(ORMDL3) +
+  aes(geno, exp, fill = geno) +
+  geom_boxplot(notch = T)
+```
+We can infer that A/A or the A allele is more highly expressed than G/G or G allele. Hence, from this, indeed the SNP does effect ORMDL3 expression.
+
+

@@ -1,0 +1,29 @@
+This is just a text editor...
+
+pwd: print working dir
+ls: list contents
+cd: change directory
+mkdir: make a new directory
+rm: remove/delete files. be careful with this, it doesn't go to your trash can.
+nano: very basic text editor
+control + x: exit button
+
+
+Instance ID: i-031becb700d7773e0 (BIMM143_KristianaWong)
+Public IP address:  35.83.253.85
+
+
+Open an SSH client.
+
+Locate your private key file. The key used to launch this instance is BIMM143_kristianawong.pem
+
+Run this command, if necessary, to ensure your key is not publicly viewable.
+ chmod 400 "BIMM143_kristianawong.pem"
+
+Connect to your instance using its Public DNS:
+ ec2-35-83-253-85.us-west-2.compute.amazonaws.com
+
+Example:
+
+ ssh -i "BIMM143_kristianawong.pem" ubuntu@ec2-35-83-253-85.us-west-2.compute.amazonaws.com
+
