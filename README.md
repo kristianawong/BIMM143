@@ -12,8 +12,8 @@ Classwork from WI24 for [BIMM143 UC San Diego](https://github.com/kristianawong/
 - Class 10: [Structural Bioinformatics (pt1)](https://github.com/kristianawong/BIMM143/blob/main/BIMM143_Class10/Class-10.pdf)
 - Class 11: [Structural Bioinformatics (pt2 AlphaFold)](https://github.com/kristianawong/BIMM143/blob/main/BIMM143_Class11/Class-11.pdf)
 - Class 12: [Genome informatics and high throughput sequencing](https://github.com/kristianawong/BIMM143/blob/main/BIMM143_Class12/Class-12.pdf)
-- Class 13
-- Class 14
+- Class 13: [Transcriptomics, RNA-Seq analysis, and the interpretation of gene lists](https://github.com/kristianawong/BIMM143/blob/main/BIMM143_Class13/Class-13.pdf)
+- Class 14: [RNA-Seq mini project](https://github.com/kristianawong/BIMM143/blob/main/BIMM143_Class14/Class-14.pdf)
 - Class 16
 - Class 17
 - Class 18
